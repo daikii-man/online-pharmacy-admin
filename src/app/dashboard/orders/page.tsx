@@ -11,7 +11,7 @@ export default function OrdersPage() {
     const [page, setPage] = React.useState(1);
     const { setOpenTakeOrderModal, setTakeCurrentOrder } = useTakeOrderContext()
 
-    const { data: orders } = useQuery({ queryKey: ['userOrders'], queryFn: getOrders })
+    const { data: orders } = useQuery({ queryKey: ['orders'], queryFn: getOrders })
 
     const onClick = (id: string) => {
         setOpenTakeOrderModal(true)

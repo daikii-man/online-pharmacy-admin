@@ -18,7 +18,7 @@ export default function CategoriesPage() {
 
     const { data: categories } = useQuery({
         queryKey: ['categories'],
-        queryFn: getCategories
+        queryFn: () => getCategories()
     })
 
     const rowsPerPage = 10;

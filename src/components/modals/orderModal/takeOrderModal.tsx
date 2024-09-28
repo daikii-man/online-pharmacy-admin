@@ -18,7 +18,7 @@ export default function TakeOrderModal() {
         mutationKey: ['orders'],
         mutationFn: (id: string) => takeTheOrder(id),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['userOrders'] })
+            queryClient.invalidateQueries({ queryKey: ['orders'] })
             setOpenTakeOrderModal(false)
             setLoading(false)
         }
