@@ -8,6 +8,7 @@ import { getEmployeeById } from "@/requestFunctions/get.employee.by.id";
 import { getEmployees } from "@/requestFunctions/get.employees";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@nextui-org/react";
+import { useTranslations } from 'next-intl'
 import React from "react";
 
 
@@ -16,7 +17,17 @@ export default function EmployyesPage() {
     const { setOpenDeleteEmployeeModal, setDeleteCurrentEmployee } = useDeleteEmployeeContext()
     const { setEditCurrentEmployee, setOpenEditEmployeeModal, editCurrentEmployee } = useEditEmployeeContext()
     const { setOpenAddEmployeeModal } = useAddEmployeeContext()
+    const [isMounted, setIsMounted] = React.useState(false);
     const [page, setPage] = React.useState(1);
+    const t = useTranslations('Pages');
+
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) {
+        return null
+    };
 
     const { data: employees } = useQuery({
         queryKey: ['employees'],
@@ -25,7 +36,7 @@ export default function EmployyesPage() {
 
     const rowsPerPage = 10;
 
-    const pages = Math.ceil(employees?.length / rowsPerPage);
+    const pages = employees ? Math.ceil(employees?.length / rowsPerPage) : 1;
 
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
@@ -57,7 +68,7 @@ export default function EmployyesPage() {
         <div className="px-6 h-screen overflow-y-scroll">
             <div className="">
                 <div className="sm:max-w-6xl xl:max-w-screen-2xl mx-auto mt-24 mb-4">
-                    <h1 className="text-2xl font-regular">Employees</h1>
+                    <h1 className="text-2xl font-regular">{t('Emloyees.title')}</h1>
                 </div>
                 <Table
                     shadow="none"
@@ -78,20 +89,20 @@ export default function EmployyesPage() {
                     }>
                     <TableHeader>
                         <TableColumn className="text-center">#</TableColumn>
-                        <TableColumn className="px-12 w-80">Phone number</TableColumn>
-                        <TableColumn className="w-80 px-12">Full name</TableColumn>
-                        <TableColumn className="px-5 w-56">Role</TableColumn>
-                        <TableColumn className="w-64 text-center">Salary</TableColumn>
+                        <TableColumn className="px-12 w-80">{t('Emloyees.table.phoneNumber')}</TableColumn>
+                        <TableColumn className="w-80 px-12">{t('Emloyees.table.fullname')}</TableColumn>
+                        <TableColumn className="px-5 w-56">{t('Emloyees.table.role')}</TableColumn>
+                        <TableColumn className="w-64 text-center">{t('Emloyees.table.salary')}</TableColumn>
                         <TableColumn className="text-center">
                             <Button
                                 onClick={() => setOpenAddEmployeeModal(true)}
                                 className="my-2 bg-foreground text-gray-50 rounded-md"
                             >
-                                Add New +
+                                {t('Emloyees.table.addButton')}
                             </Button>
                         </TableColumn>
                     </TableHeader>
-                    <TableBody emptyContent={"No employees to display."} items={items}>
+                    <TableBody emptyContent={t('Emloyees.table.emptyContent')} items={items}>
                         {items?.map((employee: any, i: number) => (
                             <TableRow key={employee.id} className="border-b">
                                 <TableCell

@@ -8,18 +8,30 @@ import { getCategoryById } from "@/requestFunctions/get.category.by.id";
 import { getCategories } from "@/requestFunctions/get.categories";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button, Image } from "@nextui-org/react";
+import { useTranslations } from 'next-intl';
 import React from "react";
 
 export default function CategoriesPage() {
     const [page, setPage] = React.useState(1);
+    const t = useTranslations('Pages');
     const { setOpenAddCategoryModal } = useAddCategoryModalContext()
     const { setOpenEditCategoryModal, setEditCurrentCategory } = useEditCategoryContext();
     const { setOpenDeleteCategoryModal, setDeletecurrentCategory } = useDeleteCategoryContext()
+    const [isMounted, setIsMounted] = React.useState(false);
+    
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
+    if (!isMounted) {
+        return null
+    };
+    
     const { data: categories } = useQuery({
         queryKey: ['categories'],
         queryFn: () => getCategories()
     })
+
 
     const rowsPerPage = 10;
 
@@ -54,7 +66,7 @@ export default function CategoriesPage() {
         <div className="px-6 h-screen overflow-y-scroll">
             <div className="">
                 <div className="sm:max-w-6xl xl:max-w-screen-2xl mx-auto mt-24 mb-4">
-                    <h1 className="text-2xl font-regular">Categories</h1>
+                    <h1 className="text-2xl font-regular">{t('Categories.title')}</h1>
                 </div>
                 <Table
                     shadow="none"
@@ -75,19 +87,19 @@ export default function CategoriesPage() {
                     }>
                     <TableHeader>
                         <TableColumn className="text-center">#</TableColumn>
-                        <TableColumn className="text-center">Name</TableColumn>
-                        <TableColumn>Photo</TableColumn>
-                        <TableColumn>Created Date</TableColumn>
+                        <TableColumn className="text-center">{t('Categories.table.name')}</TableColumn>
+                        <TableColumn>{t('Categories.table.photo')}</TableColumn>
+                        <TableColumn>{t('Categories.table.createdDate')}</TableColumn>
                         <TableColumn className="">
                             <Button
                                 className="my-2 bg-foreground text-gray-50 rounded-md"
                                 onClick={() => setOpenAddCategoryModal(true)}
                             >
-                                Add New +
+                                {t('Categories.table.addButton')}
                             </Button>
                         </TableColumn>
                     </TableHeader>
-                    <TableBody emptyContent={"No categories to display."} items={items}>
+                    <TableBody emptyContent={t('Categories.table.emptyContent')} items={items}>
                         {items?.map((category: any, i: number) => (
                             <TableRow key={category?.id} className="border-b">
                                 <TableCell
